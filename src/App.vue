@@ -1,35 +1,34 @@
 <template>
-  <form @submit="onSubmit" novalidate>
-    <div v-for="(field, idx) in fields" :key="field.key">
-      <Field :name="`links[${idx}].url`" type="url" />
-      <button type="button" @click="remove(idx)">Remove</button>
-    </div>
-    <button type="button" @click="push({ url: '' })">Add</button>
-    <button>Submit</button>
-  </form>
+  <div v-for="(field, idx) in fields" :key="field.key" style="display: flex">
+    <range-field :name="`red[${idx}]`"></range-field>
+    <button>+</button>
+  </div>
 </template>
-<script>
-import { Field, useForm, useFieldArray } from 'vee-validate';
-export default {
+
+<script lang="ts">
+import { useForm, useFieldArray } from 'vee-validate';
+import { defineComponent } from 'vue';
+import RangeField from './components/range-field.vue';
+
+export default defineComponent({
+  name: 'App',
   components: {
-    Field,
+    RangeField
   },
   setup() {
-    const { handleSubmit } = useForm({
+    useForm({
       initialValues: {
-        links: [{ id: 1, url: 'https://github.com/logaretm' }],
+        reds: [{}],
       },
     });
-    const { remove, push, fields } = useFieldArray('links');
-    const onSubmit = handleSubmit(values => {
-      console.log(JSON.stringify(values, null, 2));
-    });
+    const { remove, push, fields } = useFieldArray('reds');
     return {
-      fields,
-      push,
-      remove,
-      onSubmit,
-    };
-  },
-};
+      fields
+    }
+  }
+});
 </script>
+
+<style>
+
+</style>
