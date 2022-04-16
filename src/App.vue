@@ -1,6 +1,7 @@
 <template>
   <div class="cont">
-    <div class="cont__color-group">
+    <div class="light-group">
+      <h1 class="light-group__title">Red</h1>
       <div v-for="(field, index) in redFields" :key="field.key" style="display: flex">
         <range-field :name="rangeFieldName('red', index)"></range-field>
         <button @click="redPush([null, null])">+</button>
@@ -8,13 +9,14 @@
       </div>
     </div>
 
-    <!-- <div class="cont__color-group">
-      <div v-for="(field, index) in fields" :key="field.key" style="display: flex">
-        <range-field :name="rangeFieldName('yellow', index)"></range-field>
-        <button @click="onAdd">+</button>
+    <div class="light-group">
+      <h1 class="light-group__title">Green</h1>
+      <div v-for="(field, index) in greenFields" :key="field.key" style="display: flex">
+        <range-field :name="rangeFieldName('green', index)"></range-field>
+        <button @click="greenPush([null, null])">+</button>
+        <button @click="greenRemove(index)">-</button>
       </div>
-    </div> -->
-    
+    </div>
   </div>
 </template>
 
@@ -32,24 +34,40 @@ export default defineComponent({
     useForm({
       initialValues: {
         reds: [
-          [2, 4]
+          [null, null]
         ],
+        greens: [
+          [null, null]
+        ]
       },
     });
     const { remove: redRemove, push: redPush, fields: redFields } = useFieldArray('reds');
+    const { remove: greenRemove, push: greenPush, fields: greenFields } = useFieldArray('greens');
     const rangeFieldName = function (type: 'red' | 'yellow' | 'green', index: number) {
       return `${type}s[${index}]`;
     }
     return {
-      redFields,
       redRemove,
       redPush,
       rangeFieldName,
+      redFields,
+
+      greenRemove,
+      greenPush,
+      greenFields,
     }
   }
 });
 </script>
 
 <style>
+.cont {
+  display: flex;
+}
+.light-group {
 
+}
+.light-group__title {
+
+}
 </style>
