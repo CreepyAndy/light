@@ -1,9 +1,9 @@
 <template>
   <div>
-    <input type="number" @input="onInput1" />
+    <input type="number" v-model="value[0]" />
     ~
-    <input type="number" @input="onInput2" />
-    <span>{{ errorMessage }}</span>
+    <input type="number" v-model="value[1]" />
+    <span style="color: red">{{ errorMessage }}</span>
   </div>
 </template>
 <script lang="ts">
@@ -17,38 +17,26 @@ export default {
     }
   },
   setup(props) {
-    const formValue = ref([null, null]);
-    const onInput1 = function(e: any) {
-      formValue.value.splice(0, 1, e.target.value);
-      preCheckAndSetFieldValue();
-    }
-    const onInput2 = function(e: any) {
-      formValue.value.splice(1, 1, e.target.value);
-      preCheckAndSetFieldValue();
-    }
-    const preCheckAndSetFieldValue = function () {
-      const isInvalid = formValue.value.some(v => {
-        if (!v) {
-          return true;
-        }
-        const number = Number(v);
-        if (isNaN(number)) {
-          return true;
-        }
-        return false;
-      })
-      if (isInvalid) return;
-      setValue(formValue);
-    }
-    const { value, errorMessage, setValue } = useField(props.name, (value, ctx) => {
-      debugger
+    const { value, errorMessage, setValue } = useField<[null|number, null|number]>(props.name, (value, ctx) => {
       return '';
     });
+    // const preCheckAndSetFieldValue = function () {
+    //   const isInvalid = value.value.some(v => {
+    //     if (!v) {
+    //       return true;
+    //     }
+    //     const number = Number(v);
+    //     if (isNaN(number)) {
+    //       return true;
+    //     }
+    //     return false;
+    //   })
+    //   if (isInvalid) return;
+    // }
+    
     return {
-      formValue,
       errorMessage,
-      onInput1,
-      onInput2,
+      value
     };
   },
 };
