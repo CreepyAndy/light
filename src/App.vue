@@ -1,27 +1,35 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <form @submit="onSubmit" novalidate>
+    <div v-for="(field, idx) in fields" :key="field.key">
+      <Field :name="`links[${idx}].url`" type="url" />
+      <button type="button" @click="remove(idx)">Remove</button>
+    </div>
+    <button type="button" @click="push({ url: '' })">Add</button>
+    <button>Submit</button>
+  </form>
 </template>
-
-<script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
-
-export default defineComponent({
-  name: 'App',
+<script>
+import { Field, useForm, useFieldArray } from 'vee-validate';
+export default {
   components: {
-    HelloWorld
-  }
-});
+    Field,
+  },
+  setup() {
+    const { handleSubmit } = useForm({
+      initialValues: {
+        links: [{ id: 1, url: 'https://github.com/logaretm' }],
+      },
+    });
+    const { remove, push, fields } = useFieldArray('links');
+    const onSubmit = handleSubmit(values => {
+      console.log(JSON.stringify(values, null, 2));
+    });
+    return {
+      fields,
+      push,
+      remove,
+      onSubmit,
+    };
+  },
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
