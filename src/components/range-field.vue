@@ -18,11 +18,11 @@ export default {
   },
   setup(props) {
     const formMeta = inject('formMeta') as any;
-    const { value, errorMessage, meta } = useField<[null|number, null|number]>(props.name, (targetRange: (number)[], ctx: any) => {
-      if (targetRange.every(input => input === null)) {
+    const { value, errorMessage, meta } = useField<[''|number, ''|number]>(props.name, (targetRange: (number|'')[], ctx: any) => {
+      if (targetRange.every(input => input === '')) {
         return true
       }
-      if (targetRange.some(input => input === null)) {
+      if (targetRange.some(input => input === '')) {
         return '请输入合法的范围';
       }
       const form = JSON.parse(JSON.stringify(ctx.form)); // remove reactivity
@@ -35,7 +35,7 @@ export default {
         values = (values as number[][]).filter(v => v[0] && v[1]);
         const duplicatedIndex = (values as number[][])
           .map(v => rangeFill(v[0], v[1]))
-          .findIndex(existingValues => existingValues.some(v => rangeFill(targetRange[0], targetRange[1]).includes(v)));
+          .findIndex(existingValues => existingValues.some(v => rangeFill((targetRange as number[])[0], (targetRange as number[])[1]).includes(v)));
         if (duplicatedIndex !== -1) {
           duplicatedResult = {
             type,

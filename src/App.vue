@@ -4,7 +4,7 @@
       <h1 class="light-group__title">Red</h1>
       <div v-for="(field, index) in redFields" :key="field.key" style="display: flex">
         <range-field :name="rangeFieldName('red', index)"></range-field>
-        <button @click="redPush([null, null])">+</button>
+        <button @click="redPush(['', ''])">+</button>
         <button @click="redRemove(index)">-</button>
       </div>
     </div>
@@ -13,7 +13,7 @@
       <h1 class="light-group__title">Green</h1>
       <div v-for="(field, index) in greenFields" :key="field.key" style="display: flex">
         <range-field :name="rangeFieldName('green', index)"></range-field>
-        <button @click="greenPush([null, null])">+</button>
+        <button @click="greenPush(['', ''])">+</button>
         <button @click="greenRemove(index)">-</button>
       </div>
     </div>
@@ -34,10 +34,10 @@ export default defineComponent({
     const { meta } = useForm({
       initialValues: {
         reds: [
-          [null, null]
+          ['', '']
         ],
         greens: [
-          [null, null]
+          ['', '']
         ]
       },
     });
