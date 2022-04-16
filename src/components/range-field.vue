@@ -16,7 +16,7 @@ export default {
       required: true
     }
   },
-  setup(props) {
+  setup(props: any) {
     const formMeta = inject('formMeta') as any;
     const { value, errorMessage, meta } = useField<[''|number, ''|number]>(props.name, (targetRange: (number|'')[], ctx: any) => {
       if (targetRange.every(input => input === '')) {
