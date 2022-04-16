@@ -16,19 +16,19 @@ export default {
       required: true
     }
   },
-  setup() {
-    const _value = ref([null, null]);
+  setup(props) {
+    const formValue = ref([null, null]);
     const onInput1 = function(e: any) {
-      _value.value.splice(0, 1, e.target.value);
+      formValue.value.splice(0, 1, e.target.value);
       preCheckAndSetFieldValue();
     }
     const onInput2 = function(e: any) {
-      _value.value.splice(1, 1, e.target.value);
+      formValue.value.splice(1, 1, e.target.value);
       preCheckAndSetFieldValue();
     }
     const preCheckAndSetFieldValue = function () {
-      const isInvalid = _value.value.some(v => {
-        if (v === '' || !v) {
+      const isInvalid = formValue.value.some(v => {
+        if (!v) {
           return true;
         }
         const number = Number(v);
@@ -38,13 +38,14 @@ export default {
         return false;
       })
       if (isInvalid) return;
-      setValue(_value);
+      setValue(formValue);
     }
-    const { value, errorMessage, setValue } = useField('red0', (value, ctx) => {
+    const { value, errorMessage, setValue } = useField(props.name, (value, ctx) => {
+      debugger
       return '';
     });
     return {
-      _value,
+      formValue,
       errorMessage,
       onInput1,
       onInput2,

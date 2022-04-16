@@ -1,13 +1,13 @@
 <template>
-  <div v-for="(field, idx) in fields" :key="field.key" style="display: flex">
-    <range-field :name="`red[${idx}]`"></range-field>
-    <button>+</button>
+  <div v-for="(field, index) in fields" :key="field.key" style="display: flex">
+    <range-field :name="rangeFieldName('red', index)"></range-field>
+    <button @click="onAdd">+</button>
   </div>
 </template>
 
 <script lang="ts">
 import { useForm, useFieldArray } from 'vee-validate';
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import RangeField from './components/range-field.vue';
 
 export default defineComponent({
@@ -22,8 +22,16 @@ export default defineComponent({
       },
     });
     const { remove, push, fields } = useFieldArray('reds');
+    const rangeFieldName = function (type: 'red' | 'yellow' | 'green', index: number) {
+      return `${type}s${index}`;
+    }
+    const onAdd = function () {
+      push([null, null])
+    }
     return {
-      fields
+      fields,
+      rangeFieldName,
+      onAdd
     }
   }
 });
