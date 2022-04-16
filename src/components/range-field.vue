@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <input type="number" v-model="value[0]" />
+  <div style="margin: 10px">
+    <input type="number" v-model="value[0]" :disabled="!editable"/>
     ~
-    <input type="number" v-model="value[1]" />
-    <span style="color: red">{{ errorMessage }}</span>
+    <input type="number" v-model="value[1]" :disabled="!editable"/>
+    <span style="color: red; display: block">{{ errorMessage }}</span>
   </div>
 </template>
 <script lang="ts">
 import { useField } from 'vee-validate';
-import { ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 export default {
   props: {
     name: {
@@ -17,7 +17,11 @@ export default {
     }
   },
   setup(props) {
-    const { value, errorMessage, setValue } = useField<[null|number, null|number]>(props.name, (targetRange: (number)[], ctx: any) => {
+    const formMeta = inject('formMeta') as any;
+    const { value, errorMessage, meta } = useField<[null|number, null|number]>(props.name, (targetRange: (number)[], ctx: any) => {
+      if (targetRange.every(input => input === null)) {
+        return true
+      }
       if (targetRange.some(input => input === null)) {
         return '请输入合法的范围';
       }
@@ -43,25 +47,20 @@ export default {
       if (duplicatedResult) {
         return `与${duplicatedResult.type}的第${duplicatedResult.index + 1}项有重叠`
       }
-      return '';
+      return true;
     });
-    // const preCheckAndSetFieldValue = function () {
-    //   const isInvalid = value.value.some(v => {
-    //     if (!v) {
-    //       return true;
-    //     }
-    //     const number = Number(v);
-    //     if (isNaN(number)) {
-    //       return true;
-    //     }
-    //     return false;
-    //   })
-    //   if (isInvalid) return;
-    // }
+    const editable = computed(() => {
+      if (!meta.valid) {
+        return true;
+      }
+
+      return formMeta.value.valid
+    })
     
     return {
       errorMessage,
-      value
+      value,
+      editable
     };
   },
 };

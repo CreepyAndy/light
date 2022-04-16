@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { useForm, useFieldArray } from 'vee-validate';
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, provide } from 'vue';
 import RangeField from './components/range-field.vue';
 
 export default defineComponent({
@@ -31,7 +31,7 @@ export default defineComponent({
     RangeField
   },
   setup() {
-    useForm({
+    const { meta } = useForm({
       initialValues: {
         reds: [
           [null, null]
@@ -41,6 +41,7 @@ export default defineComponent({
         ]
       },
     });
+    provide('formMeta', meta);
     const { remove: redRemove, push: redPush, fields: redFields } = useFieldArray('reds');
     const { remove: greenRemove, push: greenPush, fields: greenFields } = useFieldArray('greens');
     const rangeFieldName = function (type: 'red' | 'yellow' | 'green', index: number) {
